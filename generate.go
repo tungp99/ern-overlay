@@ -5,8 +5,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 )
 
@@ -22,24 +24,33 @@ func run(name string, args ...string) {
 }
 
 func main() {
-	fmt.Println("🔧 Generating cross-platform build...")
+	log.Println("🔧 Generating cross-platform build...")
 
-	os.MkdirAll("dist", os.ModePerm)
+	build_dir := filepath.Join("dist", runtime.GOOS, runtime.GOARCH)
+	err := os.MkdirAll(build_dir, os.ModePerm)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	switch runtime.GOOS {
-	case "windows":
-		run("cmd", "/C", "copy", "/Y", "assets/config.ini", "dist/config.ini")
-		run("cmd", "/C", "copy", "/Y", "assets/font.ttf", "dist/Montserrat-Medium.ttf")
-	default:
-		run("cp", "assets/config.ini", "dist/")
-		run("cp", "assets/Montserrat-Medium.ttf", "dist/")
+	entries, err := os.ReadDir("assets")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	for _, e := range entries {
+		switch runtime.GOOS {
+		case "windows":
+			run("cmd", "/C", "copy", "/Y", filepath.Join("assets", e.Name()), filepath.Join(build_dir, e.Name()))
+		default:
+			run("cp", filepath.Join("assets", e.Name()), filepath.Join(build_dir, e.Name()))
+		}
 	}
 
 	out := "ern-overlay"
 	if runtime.GOOS == "windows" {
 		out += ".exe"
 	}
-	run("go", "build", "-o", "dist/"+out, ".")
+	run("go", "build", "-o", filepath.Join(build_dir, out), ".")
 
 	fmt.Println("✅ Build complete")
 }
