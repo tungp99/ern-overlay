@@ -27,7 +27,7 @@ func main() {
 	log.Println("🔧 Generating cross-platform build...")
 
 	build_dir := filepath.Join("dist", runtime.GOOS, runtime.GOARCH)
-	err := os.MkdirAll(build_dir, os.ModePerm)
+	err := os.MkdirAll(filepath.Join(build_dir, "assets"), os.ModePerm)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -40,9 +40,9 @@ func main() {
 	for _, e := range entries {
 		switch runtime.GOOS {
 		case "windows":
-			run("cmd", "/C", "copy", "/Y", filepath.Join("assets", e.Name()), filepath.Join(build_dir, e.Name()))
+			run("cmd", "/C", "copy", "/Y", filepath.Join("assets", e.Name()), filepath.Join(build_dir, "assets", e.Name()))
 		default:
-			run("cp", filepath.Join("assets", e.Name()), filepath.Join(build_dir, e.Name()))
+			run("cp", filepath.Join("assets", e.Name()), filepath.Join(build_dir, "assets", e.Name()))
 		}
 	}
 

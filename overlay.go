@@ -32,6 +32,9 @@ func (o *Overlay) CreateWindow() {
 
 	window.SetPos(pos_x, pos_y)
 	window.MakeContextCurrent()
+
+	setTopMost(window)
+
 	o.Window = window
 
 	// Initialize OpenGL

@@ -7,7 +7,7 @@ import (
 )
 
 func load_config() *ini.File {
-	var cfg, err = ini.Load("./config.ini")
+	var cfg, err = ini.Load("./assets/config.ini")
 	if err != nil {
 		log.Fatalln(err)
 	}
