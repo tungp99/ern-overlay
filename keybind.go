@@ -23,11 +23,13 @@ func hookKeybinds(cfg *ini.File) {
 		cfg.Section("keybind").Key("quit").Strings("+"),
 		cfg.Section("keybind").Key("hotreload").Strings("+")
 
+	currentEv := PAUSE
+
 	hook.Register(hook.KeyDown, reset_key_combo, func(e hook.Event) {
+		currentEv = PAUSE
 		event <- RESET
 	})
 
-	currentEv := RESUME
 	hook.Register(hook.KeyDown, toggle_key_combo, func(e hook.Event) {
 		mask := PAUSE ^ RESUME
 		currentEv ^= mask
@@ -40,6 +42,7 @@ func hookKeybinds(cfg *ini.File) {
 	})
 
 	hook.Register(hook.KeyDown, hotreload_key_combo, func(e hook.Event) {
+		currentEv = PAUSE
 		event <- HOT_RELOAD
 		cfg.Reload()
 	})

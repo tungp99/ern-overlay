@@ -35,6 +35,7 @@ func main() {
 				countup = 0
 				o.DrawFrame(time.Duration(countup * int(time.Second)))
 				ticker.Reset(time.Second)
+				ticker.Stop()
 			case RESUME:
 				ticker.Reset(time.Second)
 			case PAUSE:
@@ -47,6 +48,7 @@ func main() {
 				o.DestroyWindow()
 				o.CreateWindow()
 				ticker.Reset(time.Second)
+				ticker.Stop()
 			}
 
 		case <-ticker.C:
