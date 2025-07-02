@@ -1,6 +1,4 @@
-# CVE-2021-3156
-
-#### Stopwatch Overlay written in Go, made to play Elden Ring Nightreign lol.
+# Elden Ring Nightreign Overlay
 
 Traits:
 
